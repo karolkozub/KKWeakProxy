@@ -1,0 +1,3 @@
+[submodule "KKNil"]
+	path = KKNil
+	url = git@github.com:karolkozub/KKNil.git
