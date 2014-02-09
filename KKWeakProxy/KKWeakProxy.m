@@ -21,9 +21,15 @@ static const char *KKWeakProxyAssociatedObjectKey = "KKWeakProxy";
   id proxy = objc_getAssociatedObject(target, KKWeakProxyAssociatedObjectKey);
   
   if (nil == proxy) {
-    proxy = [[self alloc] initWithTarget:target];
+    @synchronized (target) {
+      proxy = objc_getAssociatedObject(target, KKWeakProxyAssociatedObjectKey);
+      
+      if (nil == proxy) {
+        proxy = [[self alloc] initWithTarget:target];
     
-    objc_setAssociatedObject(target, KKWeakProxyAssociatedObjectKey, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(target, KKWeakProxyAssociatedObjectKey, proxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+      }
+    }
   }
   
   return proxy;
